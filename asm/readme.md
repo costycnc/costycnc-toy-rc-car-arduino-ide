@@ -10,4 +10,4 @@ Perfect for principiants that not have any knowledge about programming!
 
 
 
-![alt text]([https://raw.githubusercontent.com/costycnc/costycnc-toy-rc-car-arduino-ide/refs/heads/master/foto/rc-car.jpeg])
+!(https://raw.githubusercontent.com/costycnc/costycnc-toy-rc-car-arduino-ide/refs/heads/master/foto/rc-car.jpeg)
