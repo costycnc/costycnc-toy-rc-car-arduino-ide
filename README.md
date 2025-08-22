@@ -37,6 +37,7 @@ rc_car1  I put D2 signal to ground and working good
                     */
 
  w2 signal(1.5ms,0.5ms):
+ 
                      digitalWrite(2, HIGH);
                      delayMicroseconds(1500);
                   
@@ -44,6 +45,7 @@ rc_car1  I put D2 signal to ground and working good
                      delayMicroseconds(500);
 
 w1 signal(0.5ms,0.5ms):
+
                      digitalWrite(2, HIGH);
                      delayMicroseconds(500);
                   
