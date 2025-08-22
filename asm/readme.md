@@ -10,9 +10,6 @@ No IDE, no libraries, nothing else required.
 Perfect for beginners with no programming knowledge!
 
 
-
-![alt text](https://raw.githubusercontent.com/costycnc/costycnc-toy-rc-car-arduino-ide/refs/heads/master/foto/rc-car.jpeg)
-
                   /*Data Format
                   W1=0.5ms  W2=1.5ms
                   W2 W2 W2 W2 (n) x W1 W2 W2 W2 W2 (n) x W1 W2 W2 W2 W2
@@ -30,4 +27,7 @@ Perfect for beginners with no programming knowledge!
                   64 Right Right
                   */
 
+![alt text](https://raw.githubusercontent.com/costycnc/costycnc-toy-rc-car-arduino-ide/refs/heads/master/foto/rc-car.jpeg)
+
+![alt text](https://raw.githubusercontent.com/costycnc/costycnc-toy-rc-car-arduino-ide/refs/heads/master/foto/schematic.jpg)
 
