@@ -9,7 +9,7 @@
           out 0x3E, r16    ; SPH
    loop:
     sbi 4,0
-    ;rcall forward
+    rcall forward
     rjmp loop
 
 
@@ -56,4 +56,5 @@
     brne pause
     dec r17
     brne pause
+
     ret
