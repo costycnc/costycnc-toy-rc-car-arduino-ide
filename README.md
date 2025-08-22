@@ -21,7 +21,7 @@ rc_car1  I put D2 signal to ground and working good
  code movement:
 
                     /*Data Format
-                    W2 W2 W2 W2 (n) x W1 W2 W2 W2 W2 (n) x W1 W2 W2 W2 W2
+                    W2 W2 W2 W2 (n) x W1 
                     Number of Function Codes (n) W1 Function Key Decode Result
                     4 End Code
                     10 Forward Forward
@@ -36,7 +36,7 @@ rc_car1  I put D2 signal to ground and working good
                     64 Right Right
                     */
 
- w1 signal(1.5ms,0.5ms):
+ w2 signal(1.5ms,0.5ms):
                      digitalWrite(2, HIGH);
                      delayMicroseconds(1500);
                   
