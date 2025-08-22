@@ -1,4 +1,8 @@
 # costycnc-rc-car-arduino-ide
+[![Demo su YouTube](https://img.youtube.com/vi/47f06ZAZPy8/0.jpg)](https://www.youtube.com/watch?v=47f06ZAZPy8)
+
+
+
 https://forum.arduino.cc/index.php?topic=171238.0
 
 rc_car1  I put D2 signal to ground and working good       
