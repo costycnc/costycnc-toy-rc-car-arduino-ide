@@ -1,5 +1,3 @@
-# costycnc-rc-car-arduino-ide
-
 # CostyCNC Toy RC Car – Arduino IDE
 
 ![RC Car](rc_car1.jpg)
