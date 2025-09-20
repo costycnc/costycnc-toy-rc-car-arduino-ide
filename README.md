@@ -64,9 +64,16 @@ digitalWrite(2, HIGH);
 delayMicroseconds(1500);
 digitalWrite(2, LOW);
 delayMicroseconds(500);
+```
 
+**W2 signal (0.5ms HIGH, 0.5ms LOW)**
 
-
+```cpp
+digitalWrite(2, HIGH);
+delayMicroseconds(500);
+digitalWrite(2, LOW);
+delayMicroseconds(500);
+```
 
 [![Demo su YouTube](https://img.youtube.com/vi/47f06ZAZPy8/0.jpg)](https://www.youtube.com/watch?v=47f06ZAZPy8)
 
