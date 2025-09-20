@@ -64,7 +64,7 @@ digitalWrite(2, LOW);
 delayMicroseconds(500);
 ```
 
-**W2 signal (0.5ms HIGH, 0.5ms LOW)**
+**W1 signal (0.5ms HIGH, 0.5ms LOW)**
 
 ```cpp
 digitalWrite(2, HIGH);
