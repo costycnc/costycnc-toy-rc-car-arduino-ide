@@ -1,204 +1,70 @@
 # costycnc-rc-car-arduino-ide
 
-This project allows you to control a toy RC car using an Arduino by sending serial commands.
-The car responds with precise movements based on microsecond-level pulse signals (W1/W2).
+# CostyCNC Toy RC Car – Arduino IDE
 
-It’s ideal for learning Arduino programming, microcontroller signal timing, and basic RC car electronics.
+![RC Car](rc_car1.jpg)
 
-🧰 Hardware Components
+**Control a toy RC car using Arduino via serial commands**  
 
-Arduino Uno or compatible
+This project enables controlling a toy RC car directly via Arduino using **serial commands and precise microsecond pulse signals**. It’s perfect for learning **Arduino programming**, **microcontroller signal timing**, and **basic RC car electronics**.
 
-Toy RC car chassis
+---
 
-Jumper wires for signal, power, and ground
+## Hardware Components
 
-Power source (battery or USB)
+- Arduino Uno or compatible  
+- Toy RC car chassis  
+- Jumper wires for signal, power, and ground  
+- Power source (battery or USB)  
 
-⚙️ Wiring / Connections
+---
 
-Connect Arduino D2 pin to the RC car signal input (as in rc_car1.jpg).
+## Wiring / Connections
 
-Connect ground and power lines from Arduino to the car.
+1. Connect **Arduino Pin 2 (D2)** to the RC car signal input.  
+2. Connect **ground and power lines** from Arduino to the car.  
+3. Ensure solid connections to prevent signal errors.  
 
-Ensure the connections are solid to avoid signal issues.
+> See `rc_car1.jpg` in the repository for a visual wiring guide.
 
-💻 Software
-📥 Uploading Code
+---
 
-Open rc_car1.ino in the Arduino IDE.
+## Software
 
-Select the correct board and COM port.
+### Uploading the Code
 
-Upload the code to the Arduino.
+1. Open `rc_car1.ino` in Arduino IDE.  
+2. Select the correct board (Arduino Uno) and COM port.  
+3. Upload the code to the Arduino board.
 
-🔧 Supported Commands (via Serial Monitor)
-Command	Movement
-a	Forward
-b	Forward Turbo
-c	Forward & Left
-d	Forward & Right
-e	Backward
-f	Backward & Right
-g	Backward & Left
-h	Left
-i	Right
-⚡ Pulse Signal Logic
+### Supported Commands (via Serial Monitor)
 
-W2 signal (1.5ms high, 0.5ms low)
+| Command | Action |
+|---------|--------|
+| a       | Forward |
+| b       | Forward Turbo |
+| c       | Forward & Left |
+| d       | Forward & Right |
+| e       | Backward |
+| f       | Backward & Right |
+| g       | Backward & Left |
+| h       | Left |
+| i       | Right |
 
-digitalWrite(2, HIGH);
-delayMicroseconds(1500);
-digitalWrite(2, LOW);
-delayMicroseconds(500);
+> Commands are sent directly via Arduino Serial Monitor.
 
-
-W1 signal (0.5ms high, 0.5ms low)
-
-digitalWrite(2, HIGH);
-delayMicroseconds(500);
-digitalWrite(2, LOW);
-delayMicroseconds(500);
-
-
-These signals encode movement commands to the car’s motor controller.
-
-📷 Media
-
-rc_car.jpg
-
-rc_car1.jpg showing wiring
-
-📄 Documentation
-
-[TX RX Car Toy PDF](tx rx car toy.pdf) – includes setup and wiring diagrams
-
-🧠 Skills Highlighted
-
-Arduino Programming
-
-Microcontroller Signal Timing
-
-Embedded Systems
-
-C++ / Assembly
-
-RC Car Electronics
-
-🧑‍💻 Contributions
-
-Feel free to fork the repository, improve code timing, or add new movement commands. Pull requests are welcome.
-
-📄 License
-
-MIT License
-
-Se vuoi, posso creare anche la versione pronta per LinkedIn Projects, con title, description, top 5 skills e media consigliati, pronta da copiare. Vuoi che lo faccia?
-
-Hai detto:
-ok ... riscrivimi adesso un readme senza includere bluetooth
-ChatGPT ha detto:
-
-Perfetto! Ecco un README.md completo e dettagliato per il repository costycnc-toy-rc-car-arduino-ide, completamente senza riferimenti al Bluetooth, basato sui file effettivi del progetto:
-
-CostyCNC Toy RC Car – Arduino IDE
-
-Control a toy RC car using Arduino via serial commands
-
-This project enables controlling a toy RC car directly via Arduino using serial commands and precise microsecond pulse signals. It’s perfect for learning Arduino programming, microcontroller signal timing, and basic RC car electronics.
-
-🧰 Hardware Components
-
-Arduino Uno or compatible
-
-Toy RC car chassis
-
-Jumper wires for signal, power, and ground
-
-Power source (battery or USB)
-
-⚙️ Wiring / Connections
-
-Connect Arduino Pin 2 (D2) to the RC car signal input.
-
-Connect ground and power lines from Arduino to the car.
-
-Ensure solid connections to prevent signal errors.
-
-See rc_car1.jpg in the repository for a visual wiring guide.
-
-💻 Software
-📥 Uploading the Code
-
-Open rc_car1.ino in Arduino IDE.
-
-Select the correct board (Arduino Uno) and COM port.
-
-Upload the code to the Arduino board.
-
-🔧 Supported Commands (via Serial Monitor)
-Command	Action
-a	Forward
-b	Forward Turbo
-c	Forward & Left
-d	Forward & Right
-e	Backward
-f	Backward & Right
-g	Backward & Left
-h	Left
-i	Right
-
-Commands are sent directly via Arduino Serial Monitor.
-
-⚡ Pulse Signal Logic
+### Pulse Signal Logic
 
 The car is controlled using precise pulse signals:
 
-W2 signal (1.5ms HIGH, 0.5ms LOW)
+**W2 signal (1.5ms HIGH, 0.5ms LOW)**
 
+```cpp
 digitalWrite(2, HIGH);
 delayMicroseconds(1500);
 digitalWrite(2, LOW);
 delayMicroseconds(500);
 
-
-W1 signal (0.5ms HIGH, 0.5ms LOW)
-
-digitalWrite(2, HIGH);
-delayMicroseconds(500);
-digitalWrite(2, LOW);
-delayMicroseconds(500);
-
-
-These signals encode movement commands to the car’s motor controller.
-
-📷 Media
-
-Wiring diagram and car setup images: rc_car.jpg, rc_car1.jpg
-
-📄 Documentation
-
-[TX RX Car Toy PDF](tx rx car toy.pdf) – setup instructions, wiring diagrams, and detailed movement guide.
-
-🧠 Skills Highlighted
-
-Arduino Programming
-
-Microcontroller Signal Timing
-
-Embedded Systems
-
-C++ / Microcontroller Logic
-
-RC Car Electronics
-
-🧑‍💻 Contributions
-
-Fork the repository, improve pulse timing, or add new movement commands. Pull requests are welcome.
-
-📄 License
-
-MIT License
 
 
 
