@@ -12,17 +12,9 @@ This specific code sends:
 - **4 x W2 pulses** → synchronization / start sequence
 - **10 x W1 pulses** → **FORWARD** command
 
-## 🔧 How to test it? (the compiler is just a tool)
-
-Use my **online ASM compiler** to write and upload the code quickly:
-
-🔗 **https://costycnc.github.io/avr-compiler-js/**
-
-> ℹ️ The compiler is just a quick tool to write ASM. **The real star is the Assembly code below!**
-
 ---
 
-## 📝 The Assembly Code (RC Car Control)
+## 📝 The Assembly Code
 
 ```asm
 .org 0
@@ -60,19 +52,19 @@ forward:
     ret
 
 w2:
-    sbi 5,0          ; Pin HIGH (PB5 / Arduino pin 13)
+    sbi 5,0          ; Set PB0 HIGH (Arduino Pin 8)
     ldi r17,31       ; Delay for 1.5ms
     rcall pause
-    cbi 5,0          ; Pin LOW
+    cbi 5,0          ; Set PB0 LOW
     ldi r17,11       ; Delay for 0.5ms
     rcall pause
     ret
 
 w1:
-    sbi 5,0          ; Pin HIGH
+    sbi 5,0          ; Set PB0 HIGH
     ldi r17,11       ; Delay for 0.5ms
     rcall pause
-    cbi 5,0          ; Pin LOW
+    cbi 5,0          ; Set PB0 LOW
     ldi r17,11       ; Delay for 0.5ms
     rcall pause
     ret
@@ -94,16 +86,6 @@ pause:
 | **W2** | 1500 µs | 500 µs | Start sequence / Sync |
 | **W1** | 500 µs | 500 µs | Command data bits |
 
-### Timing Diagram:
-
-```
-W2:  ████████████████████░░░░░░░░░░
-      └── 1500µs ──┘└─ 500µs ─┘
-
-W1:  ██████████░░░░░░░░░░
-      └─ 500µs ─┘└─ 500µs ─┘
-```
-
 ### What the code sends:
 
 ```
@@ -113,28 +95,38 @@ W1:  ██████████░░░░░░░░░░
 
 ---
 
-## 🔌 Hardware Connection
+## 🔌 Hardware Connection (IMPORTANT - READ THIS!)
 
-| Arduino Pin | Connect to |
-|-------------|------------|
-| **Pin 13** (PB5) | RC car receiver (Signal) |
-| **GND** | RC car receiver (GND) |
+The code uses `sbi 5,0` and `cbi 5,0` which control **PB0**.
+
+| Assembly Code | Port | Bit | Arduino Pin |
+|---------------|------|-----|-------------|
+| `sbi 5,0` | PORTB | 0 | **Pin 8** |
+
+### Connection Diagram:
 
 ```
 ┌───────────┐                    ┌─────────────┐
 │  Arduino  │                    │  RC Car     │
 │           │                    │  Receiver   │
-│       13  ├────────────────────► Signal In   │
-│      GND  ├────────────────────► GND         │
+│       8   ├────────────────────► Antenna     │
+│     (PB0) │                    │  (Signal)   │
+│           │                    │             │
+│           |                    │
 └───────────┘                    └─────────────┘
 ```
 
----
+### Wire it like this:
 
-## 📊 Command Reference (W1 pulse counts)
+| Arduino | Connect to |
+|---------|------------|
+| **Pin 8** (PB0) | RC car receiver **Antenna** (or Signal input) |
 
-| W1 Count | Command |
-|----------|---------|
+
+## 📊 Command Reference (Change W1 pulse count to change command)
+
+| W1 Pulses | Command |
+|-----------|---------|
 | 10 | Forward |
 | 16 | Forward + Turbo |
 | 22 | Turbo |
@@ -146,7 +138,40 @@ W1:  ██████████░░░░░░░░░░
 | 58 | Left |
 | 64 | Right |
 
-Want to change the command? Just change the number of `rcall w1` calls!
+### How to change the command:
+
+Replace the 10 `rcall w1` calls with a different number:
+
+```asm
+; Example: Backward (40 pulses)
+    rcall w1   ; repeat 40 times
+    ; ... (40 total)
+```
+
+Or use a loop for cleaner code (advanced).
+
+---
+
+## 🔧 How to test it? (the compiler is just a tool)
+
+Use my **online ASM compiler** to write and upload the code quickly:
+
+🔗 **https://costycnc.github.io/avr-compiler-js/**
+
+> ℹ️ The compiler is just a quick tool to write ASM. **The real star is the Assembly code above!**
+
+### Quick steps:
+
+1. Go to **https://costycnc.github.io/avr-compiler-js/**
+2. Copy-paste the ASM code
+3. Click **"Assemble"**
+4. Connect Arduino via USB
+5. Click **"Upload"** (select Uno/Nano)
+6. Select the USB port → **Connect**
+7. Connect Arduino Pin 8 to RC car antenna
+8. The car goes FORWARD!
+
+**No IDE installation. No drivers. No libraries. No magic.**
 
 ---
 
@@ -168,31 +193,36 @@ Real disasters happened when people ignored them:
 
 ---
 
-## 🛠️ How to use the online tool (quick steps)
+## 📊 Arduino IDE vs This Approach
 
-1. Go to **https://costycnc.github.io/avr-compiler-js/**
-2. Copy-paste the ASM code above
-3. Click **"Assemble"**
-4. Connect your Arduino via USB
-5. Click the **"Upload"** button (Uno/Nano/etc.)
-6. Select the USB port → **Connect**
-7. Done! The LED on pin 13 will blink the pulse sequence
-
-**No IDE installation. No drivers. No libraries.**
+| Feature | Arduino IDE | This ASM + Tool |
+|---------|-------------|-----------------|
+| Installation | Yes (IDE + drivers) | **No** - works in browser |
+| Libraries | Many, hide everything | **None** - you see the registers |
+| Control | DigitalWrite() | Direct port access (`sbi`, `cbi`) |
+| Learning | Softer, less transparent | **Direct** - learn how it REALLY works |
+| File size | KBs | **Bytes** (this code is tiny!) |
 
 ---
 
 ## 🎯 Summary
 
-| What is this? | Assembly code that controls an RC car using pulses |
-|---------------|-----------------------------------------------------|
+| What is this? | Assembly code that controls an RC car using pulses directly to the antenna |
+|---------------|---------------------------------------------------------------------------|
+| Which pin? | **Arduino Pin 8 (PB0)** → RC car antenna |
 | Who is it for? | Beginners, students, hobbyists who want to learn how things REALLY work |
 | Do I need to install anything? | **NO** – just a browser and a USB cable |
-| Is the compiler the main thing? | **NO** – the compiler is just a tool. The ASM code is the star! |
+| What's the compiler? | Just a tool. The ASM code is the star! |
 
 ---
 
-**Pure Assembly. No magic. Your RC car obeys your code.** 🚗⚡🎯
+## 🚗 Final connection reminder:
+
+```
+Arduino Pin 8  ─────► RC Car Antenna
+```
+
+**That's it. Pure Assembly. No magic. Your RC car obeys your code.** 🎯🔥
 
 
                   /*Data Format
