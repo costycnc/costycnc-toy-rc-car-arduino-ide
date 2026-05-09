@@ -1,6 +1,3 @@
-Ecco il **README completo** per il tuo protocollo di controllo remoto a impulsi.
-
----
 
 # RC Car Pulse Control Protocol - W1/W2 Encoding
 
