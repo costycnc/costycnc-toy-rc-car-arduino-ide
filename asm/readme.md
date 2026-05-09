@@ -1,62 +1,52 @@
 
-# 🚀 AVR ASM Online Compiler & Uploader
+# RC Car Pulse Control in Assembly (ASM) – No IDE, No Libraries
 
-Website: **[costycnc.github.io/avr-compiler-js/](https://costycnc.github.io/avr-compiler-js/)**
+[![AVR](https://img.shields.io/badge/AVR-ASM-blue.svg)](https://costycnc.github.io/avr-compiler-js/)
+[![Arduino](https://img.shields.io/badge/Arduino-Uno%2FNano-green.svg)](https://costycnc.github.io/avr-compiler-js/)
 
-## ✨ What is it?
+## 📖 What does this code do?
 
-This is an **online AVR ASM bare-metal compiler and uploader** based on WebSerial, made by myself.
+**Controls an RC car** using pulse sequences (W1 and W2). The code is written in **pure Assembly (ASM)** for AVR microcontrollers (Arduino Uno/Nano).
 
-It works entirely in your browser:
-- Write your Assembly code
-- Compile with one click
-- Upload directly to Arduino Nano, Uno, etc.
+This specific code sends:
+- **4 x W2 pulses** → synchronization / start sequence
+- **10 x W1 pulses** → **FORWARD** command
 
-**All you need:** a USB cable and an Arduino board.
+## 🔧 How to test it? (the compiler is just a tool)
 
-**No IDE, no libraries, no installations, no magic.** Just pure code and your browser!
+Use my **online ASM compiler** to write and upload the code quickly:
 
-## 🎯 Perfect for beginners
+🔗 **https://costycnc.github.io/avr-compiler-js/**
 
-Even though it says "Assembly", this platform is designed for **people with no programming knowledge at all**.
+> ℹ️ The compiler is just a quick tool to write ASM. **The real star is the Assembly code below!**
 
-| What you need | Traditional (Arduino IDE) | This platform |
-|---------------|---------------------------|---------------|
-| Installation | Yes (IDE + drivers) | **No** - works in the browser |
-| Configuration | Select board, port, chip | **Nothing** - plug and go |
-| First LED code | `setup()`, `loop()`, `digitalWrite()` | `sbi 0x4,5` → LED turns on |
-| Libraries | Many, but hide everything | **None** - you see the actual registers |
-| Learning curve | Softer, but less transparent | **Direct** - you learn how it really works |
+---
 
-## 💻 How to use
-
-### Step 1: Write your ASM code
-
-Example code (makes the car go FORWARD):
+## 📝 The Assembly Code (RC Car Control)
 
 ```asm
 .org 0
     rjmp init
 .org 0x60
 init:
-    ; --- Initialize stack ---
+    ; --- Initialize stack (MANDATORY!) ---
     ldi r16, 0xFF
     out 0x3D, r16    ; SPL
     ldi r16, 0x08
     out 0x3E, r16    ; SPH
-    
+
 loop:
-    rcall forward    ; Call the forward command
+    rcall forward    ; Send FORWARD command
     rjmp loop        ; Repeat forever
 
 forward:
-    ; Start sequence: 4 x W2 pulses (1.5ms high, 0.5ms low)
+    ; Start sequence: 4 x W2 pulses
     rcall w2
     rcall w2
     rcall w2
     rcall w2
     
-    ; Command: 10 x W1 pulses (0.5ms high, 0.5ms low) = FORWARD
+    ; Command: 10 x W1 pulses = FORWARD
     rcall w1
     rcall w1
     rcall w1
@@ -70,19 +60,19 @@ forward:
     ret
 
 w2:
-    sbi 5,0          ; Set pin HIGH (Pin 13 / PB5)
+    sbi 5,0          ; Pin HIGH (PB5 / Arduino pin 13)
     ldi r17,31       ; Delay for 1.5ms
     rcall pause
-    cbi 5,0          ; Set pin LOW
+    cbi 5,0          ; Pin LOW
     ldi r17,11       ; Delay for 0.5ms
     rcall pause
     ret
 
 w1:
-    sbi 5,0          ; Set pin HIGH
+    sbi 5,0          ; Pin HIGH
     ldi r17,11       ; Delay for 0.5ms
     rcall pause
-    cbi 5,0          ; Set pin LOW
+    cbi 5,0          ; Pin LOW
     ldi r17,11       ; Delay for 0.5ms
     rcall pause
     ret
@@ -95,100 +85,114 @@ pause:
     ret
 ```
 
-### Step 2: Assemble
+---
 
-Click the **"Assemble"** button on the website.
+## 🎮 Pulse Protocol Explained
 
-The site automatically turns your Assembly code into a **HEX file** - no compilers needed on your computer!
+| Pulse Type | HIGH Time | LOW Time | Purpose |
+|------------|-----------|----------|---------|
+| **W2** | 1500 µs | 500 µs | Start sequence / Sync |
+| **W1** | 500 µs | 500 µs | Command data bits |
 
-### Step 3: Upload
+### Timing Diagram:
 
-1. Connect your board (Arduino UNO, Nano, etc.) to your computer with a **USB cable**
-2. Click the button for your microcontroller (UNO, Nano, etc.)
-3. A window (Web Serial API) will open
-4. Select the USB port connected to your Arduino
-5. Click **"Connect"**
+```
+W2:  ████████████████████░░░░░░░░░░
+      └── 1500µs ──┘└─ 500µs ─┘
 
-That's it! The code uploads directly to your board.
+W1:  ██████████░░░░░░░░░░
+      └─ 500µs ─┘└─ 500µs ─┘
+```
 
-### Step 4: See it work!
+### What the code sends:
 
-Right after uploading, the code starts running:
-- The onboard LED on pin 13 (PB5) will blink according to your pulse pattern
-- In this example, it sends the "FORWARD" command sequence
-
-## 🎮 What this example does
-
-This ASM code implements the **RC Car Pulse Control Protocol**:
-
-| Pulse Type | Timing | Purpose |
-|------------|--------|---------|
-| **W2** | 1.5ms HIGH, 0.5ms LOW | Start sequence / Sync |
-| **W1** | 0.5ms HIGH, 0.5ms LOW | Command data bits |
-
-The example sends:
-- **4 × W2 pulses** (start sequence)
-- **10 × W1 pulses** (FORWARD command)
-
-Connect Pin 13 (PB5) to an RC car receiver, and the car will go FORWARD!
-
-## ⚠️ Why stack, call/ret, push/pop are MANDATORY
-
-This platform enforces proper stack usage because real-world disasters happened without it:
-
-| Disaster | Cause |
-|----------|-------|
-| **Boeing 737 MAX (2019)** – 346 deaths | Stack corruption in MCAS system. Push without pop, call without ret → crash. |
-| **Toyota Unintended Acceleration (2010-2023)** | Recursive calls with no stack control. Stack exhausted → data corruption. |
-
-### The 4 commandments of embedded systems:
-
-1. **Every `call` must have a `ret`** (or you're a public hazard)
-2. **`push` must be balanced by `pop`** (or the system crashes)
-3. **The stack isn't magic** – it's limited (Boeing learned the hard way)
-4. **If you don't know these, you're not an engineer** – you're a copy-paster
-
-👉 **You are not authorized to code if you don't know these 4 instructions.**
-
-## 📊 Arduino IDE vs This Platform
-
-| Feature | Arduino IDE | costycnc.github.io/avr-compiler-js |
-|---------|-------------|-------------------------------------|
-| Installation | Yes (IDE + drivers) | **No** - works directly in browser |
-| Configuration | Select board, port, chip | **Nothing to configure** - plug and go |
-| First LED code | `setup()`, `loop()`, `digitalWrite()` | `sbi 0x4,5` → LED turns on (PB5) |
-| Libraries | Many, but often hide everything | **None** - you see the actual registers |
-| Complex projects | Ideal, with many libraries | Limited to basic learning |
-| Learning curve | Softer, but less transparent | **More direct** - learn how it really works |
-
-## 🔧 Requirements
-
-- **Hardware:** Arduino UNO, Nano, or compatible board
-- **Cable:** USB cable (for data, not just power)
-- **Browser:** Chrome, Edge, or any browser that supports **WebSerial API**
-- **No software installation needed!**
-
-## 🎯 Who is this for?
-
-| User type | Is this for you? |
-|-----------|------------------|
-| Absolute beginner with no programming knowledge | ✅ **YES** - start here to learn how things REALLY work |
-| Student learning embedded systems | ✅ **YES** - see the actual registers, no magic |
-| Hobbyist who wants to understand microcontrollers | ✅ **YES** - no libraries hiding what happens |
-| Professional making complex products | ⚠️ Maybe - great for learning, but limited for large projects |
-| Someone who just wants things to work fast | ❌ No - use Arduino IDE with libraries |
-
-## 📝 License
-
-Free to use, modify, and share!
-
-## 🙏 Acknowledgments
-
-Created to show that it's possible to program microcontrollers **without libraries, without an IDE, without magic.**
+```
+[W2][W2][W2][W2] ── [W1][W1][W1][W1][W1][W1][W1][W1][W1][W1]
+     (sync)              (10 pulses = FORWARD)
+```
 
 ---
 
-**Write ASM. Click Assemble. Click Upload. See it run. No IDE. No libraries. Just code.** 🎯🔥
+## 🔌 Hardware Connection
+
+| Arduino Pin | Connect to |
+|-------------|------------|
+| **Pin 13** (PB5) | RC car receiver (Signal) |
+| **GND** | RC car receiver (GND) |
+
+```
+┌───────────┐                    ┌─────────────┐
+│  Arduino  │                    │  RC Car     │
+│           │                    │  Receiver   │
+│       13  ├────────────────────► Signal In   │
+│      GND  ├────────────────────► GND         │
+└───────────┘                    └─────────────┘
+```
+
+---
+
+## 📊 Command Reference (W1 pulse counts)
+
+| W1 Count | Command |
+|----------|---------|
+| 10 | Forward |
+| 16 | Forward + Turbo |
+| 22 | Turbo |
+| 28 | Turbo + Forward + Left |
+| 34 | Turbo + Forward + Right |
+| 40 | Backward |
+| 46 | Backward + Right |
+| 52 | Backward + Left |
+| 58 | Left |
+| 64 | Right |
+
+Want to change the command? Just change the number of `rcall w1` calls!
+
+---
+
+## ⚠️ Why stack, call/ret, push/pop are MANDATORY
+
+Real disasters happened when people ignored them:
+
+| Disaster | Cause |
+|----------|-------|
+| **Boeing 737 MAX (2019)** – 346 deaths | Stack corruption. Push without pop, call without ret. |
+| **Toyota Unintended Acceleration** | Stack exhausted from recursive calls. |
+
+### The 4 commandments (follow them!):
+
+1. ✅ Every `call` must have a `ret`
+2. ✅ Every `push` must have a `pop`
+3. ✅ Know your stack limits
+4. ✅ Otherwise, you're a **public hazard**
+
+---
+
+## 🛠️ How to use the online tool (quick steps)
+
+1. Go to **https://costycnc.github.io/avr-compiler-js/**
+2. Copy-paste the ASM code above
+3. Click **"Assemble"**
+4. Connect your Arduino via USB
+5. Click the **"Upload"** button (Uno/Nano/etc.)
+6. Select the USB port → **Connect**
+7. Done! The LED on pin 13 will blink the pulse sequence
+
+**No IDE installation. No drivers. No libraries.**
+
+---
+
+## 🎯 Summary
+
+| What is this? | Assembly code that controls an RC car using pulses |
+|---------------|-----------------------------------------------------|
+| Who is it for? | Beginners, students, hobbyists who want to learn how things REALLY work |
+| Do I need to install anything? | **NO** – just a browser and a USB cable |
+| Is the compiler the main thing? | **NO** – the compiler is just a tool. The ASM code is the star! |
+
+---
+
+**Pure Assembly. No magic. Your RC car obeys your code.** 🚗⚡🎯
 
 
                   /*Data Format
